@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static BlogDesktop.Form1;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace BlogDesktop
@@ -66,6 +67,45 @@ namespace BlogDesktop
             {
                 return false;
             }
+        }
+
+        private string AddNewPost(string title, string post)
+        {
+            try
+            {
+                string sql = $"INSERT INTO `blogtable`(`Title`, `Post`, `UserId`) VALUES (@title,@post,@userid)";
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                {
+                    connection.Open();
+
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@title", title);
+                        command.Parameters.AddWithValue("@post", post);
+                        command.Parameters.AddWithValue("@userid", UserId.Id);
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    connection.Close();
+
+                    listBox1.Items.Clear();
+
+                    ListComments();
+
+                    return "Sikeres közlés!";
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            AddNewPost(textBox1.Text, textBox2.Text);
         }
     }
 }
