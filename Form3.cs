@@ -69,6 +69,7 @@ namespace BlogDesktop
             }
         }
 
+        // Hozzáadás
         private string AddNewPost(string title, string post)
         {
             try
